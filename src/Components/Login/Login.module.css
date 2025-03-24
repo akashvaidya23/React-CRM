@@ -1,0 +1,48 @@
+.form_group{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 400px;
+    max-width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30px;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+
+.submitBtn {
+    background-color: brown;
+    color: wheat;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.signupBtn {
+    background-color: blue;
+    color: aliceblue;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.input{
+    border: 1px solid rgb(174, 171, 171);
+    height: 25px;
+    border-radius: 5px;
+    margin: 5px 0;
+    width: 300px;
+}
