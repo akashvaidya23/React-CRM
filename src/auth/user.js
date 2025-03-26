@@ -17,7 +17,8 @@ const signUp = async (data, is_login) => {
         }
     } catch (err){
         console.log(err);
-        return { status: 500, message : 'Something went wrong', error: err.response.data.message }
+        let message = err.response?.data?.message || err.message;
+        return { status: 500, message : 'Something went wrong', error: message }
     }
 };
 
@@ -35,8 +36,8 @@ const login = async (data) => {
             return { status: response.status, success: false, message: 'Something went wrong' }
         }
     } catch (err) {
-        console.log(err);
-        return { status: 500, message : 'Something went wrong', error: err.response.data.message }
+        let message = err.response?.data?.message || err.message;
+        return { status: 500, message : 'Something went wrong', error: message }
     }
 }
 
