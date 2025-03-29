@@ -4,57 +4,46 @@ import { signUp } from "../../auth/user";
 import { useDispatch, useSelector } from "react-redux";
 import { handleLogin } from "../../features/user/userSlice";
 import { useEffect } from "react";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import showToast from "../../auth/showToast";
+import Toaster from "../Toaster/Toaster";
 
 const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const user = useSelector((state) => state)
-    console.log(user.login);
+    const user = useSelector((state) => state);
+    useEffect(() => {
+        document.title = "SignUp";
+    },[]);
     useEffect(() => {
         if(user.login.is_logged_in){
             navigate("/dashboard");
         }
     },[user.login, navigate]);
+
     const signupHandler = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+        if(!data.first_name || !data.last_name || !data.email || !data.password || !data.confirm_password) {
+            showToast("Kindly fill all the details", 'error');
+            return false;
+        }
+        if(data.password != data.confirm_password){
+            showToast("Password and Confirm Password should be same", 'error');
+            return false;
+        }
         const resp = await signUp(data, true);
         console.log(resp);
         if(resp.success){
-            dispatch(handleLogin({id : resp.id}));
-            alert("Wecome");
-            navigate("/dashboard")
+            dispatch(handleLogin(resp.user));
+            navigate("/dashboard");
         } else {
-            toast.error(resp.error, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
+            showToast(resp.error, 'error');
         }
     }
     return (
         <>
-        <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-            transition={Bounce}
-        />
+        <Toaster/>
         <div className={styles.form_group}>
             <h3>SignUp</h3>
             <form method="post" onSubmit={signupHandler}>

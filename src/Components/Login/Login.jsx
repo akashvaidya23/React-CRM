@@ -1,41 +1,44 @@
 import { Link, useNavigate } from 'react-router';
 import styles from './Login.module.css';
 import { login } from '../../auth/user';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { handleLogin } from '../../features/user/userSlice';
 import { useEffect, useState } from 'react';
+import showToast from '../../auth/showToast';
+import Toaster from '../Toaster/Toaster';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector((state) => state)
-    console.log(user.login);
+
     useEffect(() => {
-        if(user.login.is_logged_in){
-            navigate("/dashboard");
-        }
-    },[user.login, navigate]);
+        document.title = "Login";
+    },[]);
 
     const loginHandler = async (e) => {
         e.preventDefault();
-        setLoading(true);
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+        if(!data.email || !data.password){
+            showToast("Kindly fill the complete form! ", 'error');
+            return false;
+        }
+        setLoading(true);
         const resp = await login(data);
         console.log(resp);
         if(resp.success) {
-            setLoading(false);
-            dispatch(handleLogin({id : resp.id}));
+            dispatch(handleLogin(resp.user));
             navigate("/dashboard")
         } else {
-            setLoading(false);
-            alert(resp.error);
+            showToast(resp.error, 'error');
         }
+        setLoading(false);
     }
 
     return (
         <>
+            <Toaster />
             <form method="post" onSubmit={loginHandler}>
                 <div className={styles.form_group}>
                     <h3>Login</h3>
@@ -44,13 +47,13 @@ const Login = () => {
                     <div>
                         <label htmlFor="email">Email</label>
                         <br />
-                        <input className={styles.input} type="text" name="email" autoComplete='off' autoFocus />
+                        <input className={styles.input} type="text" name="email" autoComplete='off' placeholder="akash.vaidya@google.it" autoFocus />
                     </div>
                     <br />
                     <div>
                         <label htmlFor="password">Password</label>
                         <br />
-                        <input className={styles.input} type="password" name="password" autoComplete='off' />
+                        <input className={styles.input} type="password" name="password" placeholder="12345" autoComplete='off' />
                     </div>
                     <br />
                     <div className={styles.buttons}>

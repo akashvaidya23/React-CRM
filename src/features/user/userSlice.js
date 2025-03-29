@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     is_logged_in: localStorage.getItem('user_id') != null,
-    user_id : localStorage.getItem('user_id')
+    user_id : localStorage.getItem('user_id') || null,
 }
 
 export const userSlice = createSlice({
@@ -10,14 +10,19 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         handleLogin: (state, action) => {
-            // state.value += action.payload
+            console.log(action);
             state.is_logged_in = true;
-            state.user_id = action.payload.id; 
+            state.user_id = action.payload._id;
+        },
+        handleLogout: (state) => {
+            localStorage.removeItem("user_id");
+            state.is_logged_in = false;
+            state.user_id = null;
         },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { handleLogin } = userSlice.actions
+export const { handleLogin, handleLogout } = userSlice.actions
 
 export default userSlice.reducer;
