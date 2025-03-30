@@ -28,7 +28,7 @@ const login = async (data) => {
             url: `http://localhost:8002/api/users/login`,
             data: data,
         });
-        console.log(response);
+        // console.log(response);
         
         if(response.status == 201) {
             localStorage.setItem("user_id", response.data.token);
@@ -42,13 +42,12 @@ const login = async (data) => {
     }
 }
 
-const getUser = async (id) => {
+const getUser = async (userId) => {
     try {
         const response = await axios({
             method: "get",
-            url: `http://localhost:8002/api/users/${id}`,
+            url: `http://localhost:8002/api/users/${userId}`,
         });
-        console.log(response);
         if(response.status == 200) {
             return { status: response.status, success: true, message : 'User fetched successfully', user : response.data.user }
         } else {
@@ -60,4 +59,4 @@ const getUser = async (id) => {
     }
 }
 
-export {signUp, login, getUser}
+export {signUp, login, getUser};

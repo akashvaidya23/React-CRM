@@ -1,28 +1,17 @@
-import { useSelector } from "react-redux";
 import { getUser } from "../../auth/user";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-    // const selector = useSelector((state) => state);
-    // const [currentUser, setCurrentUser] = useState(null);
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         try {
-    //             console.log(selector.login);
-    //             const user = await getUser(selector.login.user_id);
-    //             setCurrentUser(user.user);
-    //         } catch (error) {
-    //             console.error("Error fetching user:", error);
-    //         }
-    //     };
-    //     fetchUser();
-    // }, [selector.login.user_id]);
     const [currentUser, setCurrentUser] = useState(null);
-    let user_id = localStorage.getItem("user_id");
+    let userId = localStorage.getItem("user_id");
+    useEffect(() => {
+        document.title = "Dashboard";
+    },[]);
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const user = await getUser(user_id);
+                const user = await getUser(userId);
                 setCurrentUser(user.user);
             } catch (error) {
                 console.error("Error fetching user:", error);
@@ -30,11 +19,12 @@ const Dashboard = () => {
         };
         fetchUser();
     }, []);
+
     return (
         <>
             <h3>Welcome to POS</h3>
             {currentUser ? (
-                <p>{`Hello ${currentUser.first_name} ${currentUser.last_name}. Your email is ${currentUser.email}`}</p>
+                <p>{`Hello ${currentUser.first_name}. Your email is ${currentUser.email}`}</p>
             ) : (
                 <p>Loading user data...</p>
             )}

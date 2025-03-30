@@ -26,10 +26,13 @@ const Login = () => {
         }
         setLoading(true);
         const resp = await login(data);
-        console.log(resp);
         if(resp.success) {
             dispatch(handleLogin(resp.user));
-            navigate("/dashboard")
+            if(resp.user.role == "admin" || resp.user.role == "superAdmin"){
+                navigate("/dashboard");
+            } else {
+                navigate("/shop");
+            }
         } else {
             showToast(resp.error, 'error');
         }
