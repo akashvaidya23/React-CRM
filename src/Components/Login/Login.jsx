@@ -6,6 +6,7 @@ import { handleLogin } from '../../features/user/userSlice';
 import { useEffect, useState } from 'react';
 import showToast from '../../auth/showToast';
 import Toaster from '../Toaster/Toaster';
+import axios from 'axios';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -17,27 +18,38 @@ const Login = () => {
     },[]);
 
     const loginHandler = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        if(!data.email || !data.password){
-            showToast("Kindly fill the complete form! ", 'error');
-            return false;
-        }
-        setLoading(true);
-        const resp = await login(data);
-        if(resp.success) {
-            dispatch(handleLogin(resp.user));
-            if(resp.user.role == "admin" || resp.user.role == "superAdmin"){
-                navigate("/dashboard");
-            } else {
-                navigate("/shop");
+        try {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            if(!data.email || !data.password){
+                showToast("Kindly fill the complete form! ", 'error');
+                return false;
             }
-        } else {
-            showToast(resp.error, 'error');
+            setLoading(true);
+            const resp = await login(data);
+            if(resp.success) {
+                dispatch(handleLogin(resp.user));
+                if(resp.user.role == "admin" || resp.user.role == "superAdmin"){
+                    navigate("/dashboard");
+                } else {
+                    navigate("/shop");
+                }
+            } else {
+                showToast(resp.error, 'error');
+            }
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            showToast("Something went wrong!", 'error');
         }
-        setLoading(false);
     }
+
+    // const test = async () => {
+    //     const response = await axios.get("http://localhost:8002/api/protected-route", { withCredentials: true });
+    //     console.log(response.data);
+    // }
 
     return (
         <>

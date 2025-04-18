@@ -5,9 +5,13 @@ import { handleLogout } from "../../features/user/userSlice";
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const selector = useSelector((state) => state);
-    const currentUser = selector.login.user_id;
-
+    const currentUser = useSelector((state) => state.login.user_id);    
+    // const getCookie = (name) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    console.log(match);
+    // return false;
+        // return match ? match[2] : null;
+    //   };
     const logoutHandle = () => {
         dispatch(handleLogout());
         navigate("/login");
